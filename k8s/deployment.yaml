@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: my-maven-app
-        image: <DOCKERHUB_USERNAME>/my-maven-app:latest
+        image: viresh1994/my-maven-app:latest
         ports:
         - containerPort: 8080
       imagePullSecrets:
