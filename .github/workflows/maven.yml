@@ -55,6 +55,7 @@ jobs:
 
     - name: Deploy to Minikube
       run: |
+        kubectl delete deployment my-maven-app --force --grace-period=0
         kubectl apply -f k8s/deployment.yaml
         kubectl apply -f k8s/service.yaml
         kubectl rollout status deployment/my-maven-app
