@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: myapp-deployment
+  name: my-maven-app
 spec:
-  replicas: 2  # Number of pod replicas to run
+  replicas: 1
   selector:
     matchLabels:
-      app: myapp
+      app: my-maven-app
   template:
     metadata:
       labels:
-        app: myapp
+        app: my-maven-app
     spec:
       containers:
-      - name: myapp
-        image: ${{ secrets.DOCKERHUB_USERNAME }}/my-maven-app:latest  # Docker Hub image
+      - name: my-maven-app
+        image: <DOCKERHUB_USERNAME>/my-maven-app:latest
         ports:
-        - containerPort: 8080  # Your app runs on port 8080
+        - containerPort: 8080
