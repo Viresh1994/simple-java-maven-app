@@ -1,0 +1,22 @@
+name: Deploy to Minikube
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+
+    # Use your self-hosted runner (Windows VM with Minikube)
+    runs-on: [self-hosted, Linux]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+    - name: Deploy to Minikube
+      run: |
+        kubectl apply -f k8s-deployment.yaml
+        kubectl rollout status deployment/my-maven-app
