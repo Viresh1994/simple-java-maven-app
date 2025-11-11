@@ -1,70 +1,44 @@
-name: PostgreSQL Secure Test (with Debug Logs)
+name: PostgreSQL 17 Client Test
 
 on:
-  push:
-    branches: [ "master" ]
+  workflow_dispatch:
 
 jobs:
-  test:
+  check-psql:
     runs-on: ubuntu-latest
-
-    env:
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
 
     services:
       postgres:
-        image: postgres:17
+        image: postgres:17   # 👈 PostgreSQL 17 image
+        env:
+          POSTGRES_USER: github
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testdb
         ports:
           - 5432:5432
-        env:
-          POSTGRES_USER: ${POSTGRES_USER:-github}
-          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password123}
-          POSTGRES_DB: ${POSTGRES_DB:-testdb}
         options: >-
-          --health-cmd="pg_isready -U ${POSTGRES_USER:-github}"
+          --health-cmd="pg_isready -U github"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Install PostgreSQL client
-        run: sudo apt-get update && sudo apt-get install -y postgresql-client
-
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
       - name: Wait for PostgreSQL to be ready
         run: |
-          echo "Waiting for PostgreSQL service to start..."
           for i in {1..10}; do
-            if pg_isready -h localhost -U "${POSTGRES_USER:-github}" > /dev/null 2>&1; then
-              echo "✅ PostgreSQL is ready!"
+            if pg_isready -h localhost -p 5432 -U github; then
+              echo "✅ Postgres is ready!"
               break
             fi
-            echo "⏳ Waiting ($i/10)..."
-            sleep 3
+            echo "⏳ Waiting for Postgres..."
+            sleep 5
           done
+      - name: Show client version
+        run: psql --version
 
-      # 🧰 Debug step: print container logs if postgres fails
-      - name: Debug PostgreSQL container logs
-        if: failure()
+      - name: Connect to PostgreSQL and show server version
         run: |
-          echo "🔍 Showing PostgreSQL container logs..."
-          docker ps -a
-          POSTGRES_CONTAINER_ID=$(docker ps -a --filter "ancestor=postgres:17" --format "{{.ID}}" | head -n 1)
-          echo "Container ID: $POSTGRES_CONTAINER_ID"
-          if [ -n "$POSTGRES_CONTAINER_ID" ]; then
-            echo "-----------------------------------"
-            docker logs --details "$POSTGRES_CONTAINER_ID"
-            echo "-----------------------------------"
-          else
-            echo "⚠️ No PostgreSQL container found."
-          fi
-
-      - name: Connect and show PostgreSQL version
-        run: |
-          echo "🔗 Connecting to PostgreSQL..."
-          PGPASSWORD="${POSTGRES_PASSWORD:-password123}" \
-          psql -h localhost -U "${POSTGRES_USER:-github}" -d "${POSTGRES_DB:-testdb}" -c "SELECT version();"
+          PGPASSWORD=password psql -h localhost -U github -d testdb -c "SELECT version();"
