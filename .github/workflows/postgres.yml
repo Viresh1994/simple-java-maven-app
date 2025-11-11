@@ -1,59 +1,48 @@
-name: PostgreSQL 17 Client Test
+name: PostgreSQL Secure Test
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [ "master" ]
 
 jobs:
-  check-psql:
+  test:
     runs-on: ubuntu-latest
 
     env:
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      
+
     services:
       postgres:
-        image: postgres:17   # 👈 PostgreSQL 17 image
+        image: postgres:17
         ports:
           - 5432:5432
         env:
-          POSTGRES_USER: $POSTGRES_USER
-          POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-          POSTGRES_DB: $POSTGRES_DB
+          POSTGRES_USER: ${POSTGRES_USER:-github}
+          POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password123}
+          POSTGRES_DB: ${POSTGRES_DB:-testdb}
         options: >-
-          --health-cmd="pg_isready -U github"
+          --health-cmd="pg_isready -U ${POSTGRES_USER:-github}"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
 
     steps:
-      - name: Install PostgreSQL client
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y postgresql-client
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # - name: Wait for PostgreSQL to be ready
-      #   run: |
-      #     for i in {1..10}; do
-      #       if pg_isready -h localhost -p 5432 -U github; then
-      #         echo "✅ Postgres is ready!"
-      #         break
-      #       fi
-      #       echo "⏳ Waiting for Postgres..."
-      #       sleep 5
-      #     done
+      - name: Install PostgreSQL client
+        run: sudo apt-get update && sudo apt-get install -y postgresql-client
+
       - name: Wait for PostgreSQL to be ready
         run: |
-          until pg_isready -h localhost -U "$POSTGRES_USER"; do
+          until pg_isready -h localhost -U "${POSTGRES_USER:-github}"; do
             echo "Waiting for PostgreSQL..."
             sleep 2
           done
 
-      - name: Show client version
-        run: psql --version
-
       - name: Connect and show version
         run: |
-          PGPASSWORD=$POSTGRES_PASSWORD \
-          psql -h localhost -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT version();"
+          PGPASSWORD="${POSTGRES_PASSWORD:-password123}" \
+          psql -h localhost -U "${POSTGRES_USER:-github}" -d "${POSTGRES_DB:-testdb}" -c "SELECT version();"
