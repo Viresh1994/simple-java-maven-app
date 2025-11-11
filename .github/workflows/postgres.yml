@@ -1,0 +1,47 @@
+name: PostgreSQL 17 Client Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check-psql:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17   # 👈 PostgreSQL 17 image
+        env:
+          POSTGRES_USER: github
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U github"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+
+      - name: Wait for PostgreSQL to be ready
+        run: |
+          for i in {1..10}; do
+            if pg_isready -h localhost -p 5432 -U github; then
+              echo "✅ Postgres is ready!"
+              break
+            fi
+            echo "⏳ Waiting for Postgres..."
+            sleep 5
+          done
+
+      - name: Show client version
+        run: psql --version
+
+      - name: Connect to PostgreSQL and show server version
+        run: |
+          PGPASSWORD=password psql -h localhost -U github -d testdb -c "SELECT version();"
