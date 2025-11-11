@@ -11,9 +11,9 @@ jobs:
       postgres:
         image: postgres:17   # 👈 PostgreSQL 17 image
         env:
-          POSTGRES_USER: github
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: testdb
+          POSTGRES_USER: ${{ secrets.PG_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.PG_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.PG_DB }}
         ports:
           - 5432:5432
         options: >-
