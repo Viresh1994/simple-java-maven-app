@@ -39,6 +39,11 @@ jobs:
       - name: Show client version
         run: psql --version
 
+      - name: List repo files
+        run: |
+          echo "Listing repository files..."
+          ls -R
+          
       # - name: Connect to PostgreSQL and show server version
       #   run: |
       #     PGPASSWORD=password psql -h localhost -U github -d testdb -c "SELECT version();"
