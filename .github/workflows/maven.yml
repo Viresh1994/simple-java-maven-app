@@ -58,10 +58,25 @@ jobs:
 
     - name: Verify Helm
       run: helm version
-      
-    - name: Deploy to Minikube
+
+    - name: Deploy using Helm
       run: |
-        kubectl delete deployment my-maven-app --force --grace-period=0
-        kubectl apply -f k8s/deployment.yaml
-        kubectl apply -f k8s/service.yaml
-        kubectl rollout status deployment/my-maven-app --timeout=60s
+          helm upgrade --install my-maven-app ./my-maven-app \
+            --set image.repository=${{ secrets.DOCKERHUB_USERNAME }}/my-maven-app \
+            --set image.tag=latest \
+            --set image.pullPolicy=Always \
+            --set service.type=NodePort \
+            --set service.port=8080 \
+            --set service.nodePort=30080
+    - name: Verify Deployment
+      run: |
+          kubectl rollout status deployment/my-maven-app --timeout=60s
+          kubectl get pods -o wide
+          kubectl get svc my-maven-app-service
+    
+    # - name: Deploy to Minikube
+    #   run: |
+    #     kubectl delete deployment my-maven-app --force --grace-period=0
+    #     kubectl apply -f k8s/deployment.yaml
+    #     kubectl apply -f k8s/service.yaml
+    #     kubectl rollout status deployment/my-maven-app --timeout=60s
