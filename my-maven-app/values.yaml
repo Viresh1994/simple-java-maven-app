@@ -1,3 +1,5 @@
+replicaCount: 1
+
 image:
   repository: viresh1994/my-maven-app
   tag: latest
@@ -6,3 +8,7 @@ image:
 service:
   type: NodePort
   port: 8080
+  nodePort: 30080
+
+imagePullSecrets:
+  - name: dockerhub-secret
