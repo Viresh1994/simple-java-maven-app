@@ -61,8 +61,9 @@ jobs:
 
     - name: Clean old resources (optional)
       run: |
-        kubectl delete deployment my-maven-app || true
-        kubectl delete svc my-maven-app-service || true
+        kubectl delete deployment my-maven-app --ignore-not-found=true
+        kubectl delete svc my-maven-app-service --ignore-not-found=true
+
 
     - name: Deploy using Helm
       run: |
