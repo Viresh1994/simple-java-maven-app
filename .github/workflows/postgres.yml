@@ -65,13 +65,23 @@ jobs:
           out="./select_output.txt"
           echo "=== Products (limit 10) ===" > $out
           # Connect to the target DB the SQL switched to (classicmodels). Use -d classicmodels if SQL created it and did \c classicmodels
-          psql -h localhost -U classicmodels -d classicmodels -c "\x" -c "SELECT productcode, productname, buyprice FROM products LIMIT 10;" >> $out 2>&1
+          psql -h localhost -U github -d classicmodels -c "\x" -c "SELECT productcode, productname, buyprice FROM products LIMIT 10;" >> $out 2>&1
           echo -e "\n=== Customers (limit 10) ===" >> $out
-          psql -h localhost -U classicmodels -d classicmodels -c "\x" -c "SELECT customernumber, customername, city, country FROM customers LIMIT 10;" >> $out 2>&1
+          psql -h localhost -U githu -d classicmodels -c "\x" -c "SELECT customernumber, customername, city, country FROM customers LIMIT 10;" >> $out 2>&1
           echo -e "\n=== Orders (limit 10) ===" >> $out
-          psql -h localhost -U classicmodels -d classicmodels -c "\x" -c "SELECT ordernumber, orderdate, status, customernumber FROM orders LIMIT 10;" >> $out 2>&1
+          psql -h localhost -U github -d classicmodels -c "\x" -c "SELECT ordernumber, orderdate, status, customernumber FROM orders LIMIT 10;" >> $out 2>&1
           echo "Saved select output to $out"
           cat $out
+
+      - name: Debug – count rows
+        env:
+          PGPASSWORD: password
+        run: |
+          echo "=== Table row counts ==="
+          for tbl in productlines products offices employees customers payments orders orderdetails; do
+            echo "Table: $tbl"
+            psql -h localhost -U github -d classicmodels -c "SELECT COUNT(*) FROM $tbl;"
+          done
 
       - name: Upload SELECT output artifact
         uses: actions/upload-artifact@v4
