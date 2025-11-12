@@ -113,6 +113,7 @@ CREATE TABLE orderdetails (
 );
 
 -- Insert data (subset)
+SET session_replication_role = replica;
 
 INSERT INTO productlines (productLine,textDescription,htmlDescription,image) VALUES
 ('Classic Cars','Attention car enthusiasts: Make your wildest car ownership dreams come true. Whether you are looking for classic muscle cars, dream sports cars or movie-inspired miniatures, you will find great choices in this category. These replicas feature superb attention to detail and craftsmanship and offer features such as working steering system, opening forward compartment, opening rear trunk with removable spare wheel, 4-wheel independent spring suspension, and so on. The models range in size from 1:10 to 1:24 scale and include numerous limited edition and several out-of-production vehicles. All models include a certificate of authenticity from their manufacturers and come fully assembled and ready for display in the home or office.',NULL,NULL),
@@ -123,8 +124,16 @@ INSERT INTO productlines (productLine,textDescription,htmlDescription,image) VAL
 ('Trucks and Buses','The Truck and Bus models are realistic replicas of buses and specialized trucks produced from the early 1920s to present. The models range in size from 1:12 to 1:50 scale and include numerous limited edition and several out-of-production vehicles. Materials used include tin, diecast and plastic. All models include a certificate of authenticity from their manufacturers and are a perfect ornament for the home and office.',NULL,NULL),
 ('Vintage Cars','Our Vintage Car models realistically portray automobiles produced from the early 1900s through the 1940s. Materials used include Bakelite, diecast, plastic and wood. Most of the replicas are in the 1:18 and 1:24 scale sizes, which provide the optimum in detail and accuracy. Prices range from $30.00 up to $180.00 for some special limited edition replicas. All models include a certificate of authenticity from their manufacturers and come fully assembled and ready for display in the home or office.',NULL,NULL);
 
+SET session_replication_role = DEFAULT;
+
+SET session_replication_role = replica;
+
 INSERT INTO products (productCode,productName,productLine,productScale,productVendor,productDescription,quantityInStock,buyPrice,MSRP) VALUES
 ('S10_1678','1969 Harley Davidson Ultimate Chopper','Motorcycles','1:10','Min Lin Diecast','This replica features working kickstand, front suspension, gear-shift lever, footbrake lever, drive chain, wheels and steering. All parts are particularly delicate due to their precise scale and require special care and attention.',7933,'48.81','95.70');
+
+SET session_replication_role = DEFAULT;
+
+SET session_replication_role = replica;
 
 INSERT INTO offices (officeCode,city,phone,addressLine1,addressLine2,state,country,postalCode,territory) VALUES
 ('1','San Francisco','+1 650 219 4782','100 Market Street','Suite 300','CA','USA','94080','NA'),
@@ -134,6 +143,10 @@ INSERT INTO offices (officeCode,city,phone,addressLine1,addressLine2,state,count
 ('5','Tokyo','+81 33 224 5000','4-1 Kioicho',NULL,'Chiyoda-Ku','Japan','102-8578','Japan'),
 ('6','Sydney','+61 2 9264 2451','5-11 Wentworth Avenue','Floor #2',NULL,'Australia','NSW 2010','APAC'),
 ('7','London','+44 20 7877 2041','25 Old Broad Street','Level 7',NULL,'UK','EC2N 1HN','EMEA');
+
+SET session_replication_role = DEFAULT;
+
+SET session_replication_role = replica;
 
 INSERT INTO employees (employeeNumber,lastName,firstName,extension,email,officeCode,reportsTo,jobTitle) VALUES
 (1002,'Murphy','Diane','x5800','dmurphy@classicmodelcars.com','1',NULL,'President'),
@@ -159,6 +172,10 @@ INSERT INTO employees (employeeNumber,lastName,firstName,extension,email,officeC
 (1621,'Nishi','Mami','x101','mnishi@classicmodelcars.com','5',1056,'Sales Rep'),
 (1625,'Kato','Yoshimi','x102','ykato@classicmodelcars.com','5',1621,'Sales Rep'),
 (1702,'Gerard','Martin','x2312','mgerard@classicmodelcars.com','4',1102,'Sales Rep');
+
+SET session_replication_role = DEFAULT;
+
+SET session_replication_role = replica;
 
 INSERT INTO customers (customerNumber,customerName,contactLastName,contactFirstName,phone,addressLine1,addressLine2,city,state,postalCode,country,salesRepEmployeeNumber,creditLimit) VALUES
 (103,'Atelier graphique','Schmitt','Carine ','40.32.2555','54, rue Royale',NULL,'Nantes',NULL,'44000','France',1370,'21000.00'),
@@ -212,6 +229,10 @@ INSERT INTO customers (customerNumber,customerName,contactLastName,contactFirstN
 (247,'Messner Shopping Network','Messner','Renate','069-0555984','Magazinweg 7',NULL,'Frankfurt',NULL,'60528','Germany',NULL,'0.00'),
 (249,'Amica Models & Co.','Accorti','Paolo','011-4988555','Via Monte Bianco 34',NULL,'Torino',NULL,'10100','Italy',1401,'113000.00');
 
+SET session_replication_role = DEFAULT;
+
+SET session_replication_role = replica;
+
 INSERT INTO orders (orderNumber,orderDate,requiredDate,shippedDate,status,comments,customerNumber) VALUES
 (10100,'2003-01-06','2003-01-13','2003-01-10','Shipped',NULL,363),
 (10101,'2003-01-09','2003-01-18','2003-01-11','Shipped','Check on availability.',128),
@@ -263,6 +284,10 @@ INSERT INTO orders (orderNumber,orderDate,requiredDate,shippedDate,status,commen
 (10147,'2003-09-05','2003-09-12','2003-09-09','Shipped',NULL,379),
 (10148,'2003-09-11','2003-09-21','2003-09-15','Shipped','They want to reevaluate their terms agreement with Finance.',276),
 (10149,'2003-09-12','2003-09-18','2003-09-17','Shipped',NULL,487);
+
+SET session_replication_role = DEFAULT;
+
+SET session_replication_role = replica;
 
 INSERT INTO payments (customerNumber,checkNumber,paymentDate,amount) VALUES
 (103,'HQ336336','2004-10-19','6066.78'),
@@ -316,6 +341,10 @@ INSERT INTO payments (customerNumber,checkNumber,paymentDate,amount) VALUES
 (141,'NU627706','2004-05-17','26155.91'),
 (144,'IR846303','2004-12-12','36005.71');
 
+SET session_replication_role = DEFAULT;
+
+SET session_replication_role = replica;
+
 INSERT INTO orderdetails (orderNumber,productCode,quantityOrdered,priceEach,orderLineNumber) VALUES
 (10100,'S18_1749',30,'136.00',3),
 (10100,'S18_2248',50,'55.09',2),
@@ -367,3 +396,5 @@ INSERT INTO orderdetails (orderNumber,productCode,quantityOrdered,priceEach,orde
 (10105,'S24_3816',50,'75.47',1),
 (10105,'S700_1138',41,'54.00',5),
 (10105,'S700_1938',29,'86.61',12);
+
+SET session_replication_role = DEFAULT;
