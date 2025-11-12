@@ -1,21 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: my-maven-app
+  name: {{ .Chart.Name }}
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: my-maven-app
+      app: {{ .Chart.Name }}
   template:
     metadata:
       labels:
-        app: my-maven-app
+        app: {{ .Chart.Name }}
     spec:
       containers:
-      - name: my-maven-app
-        image: viresh1994/my-maven-app:latest
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
-        - containerPort: 8080
+        - containerPort: {{ .Values.service.port }}
       imagePullSecrets:
-      - name: dockerhub-secret
+      {{- range .Values.imagePullSecrets }}
+      - name: {{ .name }}
+      {{- end }}
