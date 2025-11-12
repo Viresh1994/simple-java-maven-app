@@ -47,7 +47,14 @@ jobs:
         run: |
           echo "Listing repository files..."
           ls -R
-          
+      - name: Debug – validate SQL syntax
+        env:
+          PGPASSWORD: password
+        run: |
+          echo "Running in strict mode to catch errors"
+          echo "\set ON_ERROR_STOP on" | cat - scripts/postgres_classicmodels_subset.sql > scripts/sql_debug.sql
+          psql -h localhost -U github -d classicmodels -f scripts/sql_debug.sql
+   
       # - name: Connect to PostgreSQL and show server version
       #   run: |
       #     PGPASSWORD=password psql -h localhost -U classicmodels -d testdb -c "SELECT version();"
