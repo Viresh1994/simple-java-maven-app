@@ -13,7 +13,7 @@ jobs:
         env:
           POSTGRES_USER: github
           POSTGRES_PASSWORD: password
-          POSTGRES_DB: testdb
+          POSTGRES_DB: classicmodels
         ports:
           - 5432:5432
         options: >-
@@ -50,11 +50,11 @@ jobs:
           
       # - name: Connect to PostgreSQL and show server version
       #   run: |
-      #     PGPASSWORD=password psql -h localhost -U github -d testdb -c "SELECT version();"
+      #     PGPASSWORD=password psql -h localhost -U classicmodels -d testdb -c "SELECT version();"
       - name: Run schema + data SQL file
         env:
           PGPASSWORD: password
         run: |
           echo "=== Running SQL file: scripts/postgres_classicmodels_subset.sql ==="
-          psql -h localhost -U github -d testdb -f scripts/postgres_classicmodels_subset.sql
+          psql -h localhost -U github -d classicmodels -f scripts/postgres_classicmodels_subset.sql
 
