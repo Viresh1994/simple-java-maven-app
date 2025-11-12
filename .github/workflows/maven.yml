@@ -46,7 +46,7 @@ jobs:
       
   deploy:
     # Use your self-hosted runner (Windows VM with Minikube)
-    runs-on: Linux
+    runs-on: ubuntu-latest
     environment:
       name: staging 
     steps:
