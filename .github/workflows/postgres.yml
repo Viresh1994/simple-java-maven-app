@@ -67,7 +67,7 @@ jobs:
           # Connect to the target DB the SQL switched to (classicmodels). Use -d classicmodels if SQL created it and did \c classicmodels
           psql -h localhost -U github -d classicmodels -c "\x" -c "SELECT productcode, productname, buyprice FROM products LIMIT 10;" >> $out 2>&1
           echo -e "\n=== Customers (limit 10) ===" >> $out
-          psql -h localhost -U githu -d classicmodels -c "\x" -c "SELECT customernumber, customername, city, country FROM customers LIMIT 10;" >> $out 2>&1
+          psql -h localhost -U github -d classicmodels -c "\x" -c "SELECT customernumber, customername, city, country FROM customers LIMIT 10;" >> $out 2>&1
           echo -e "\n=== Orders (limit 10) ===" >> $out
           psql -h localhost -U github -d classicmodels -c "\x" -c "SELECT ordernumber, orderdate, status, customernumber FROM orders LIMIT 10;" >> $out 2>&1
           echo "Saved select output to $out"
