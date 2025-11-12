@@ -1,0 +1,8 @@
+image:
+  repository: viresh1994/my-maven-app
+  tag: latest
+  pullPolicy: Always
+
+service:
+  type: NodePort
+  port: 8080
