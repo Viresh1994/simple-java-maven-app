@@ -28,8 +28,8 @@ jobs:
     
       - name: Install PostgreSQL client
         run: |
-          echo "password" | sudo -S apt-get update
-          echo "password" | sudo -S apt-get install -y postgresql-client
+          echo "viresh1994" | sudo -S apt-get update
+          echo "viresh1994" | sudo -S apt-get install -y postgresql-client
       - name: Wait for PostgreSQL to be ready
         run: |
           for i in {1..10}; do
