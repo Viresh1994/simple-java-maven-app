@@ -5,7 +5,7 @@ on:
 
 jobs:
   check-psql:
-    runs-on: ubuntu-latest
+    runs-on: Linux
 
     services:
       postgres:
