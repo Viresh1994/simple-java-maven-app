@@ -1,5 +1,1 @@
-🔐 Requesting AAD access token for client_id=89ee61fa-75b5-41a8-a9b2-c5d719440f89
-HTTP status from IMDS: 400
-Raw IMDS response:
-{"error":"invalid_request","error_description":"Identity not found"}
-❌ IMDS did not return 200. Cannot get token.
+https://chatgpt.com/share/691c988a-7ad4-8013-8dcb-e59772240562
