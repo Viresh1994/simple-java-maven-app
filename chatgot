@@ -1,29 +1,5 @@
-- name: Get AAD token from managed identity (IMDS)
-  run: |
-    set -euo pipefail
-
-    echo "🔐 Requesting AAD access token for client_id=${AAD_CLIENT_ID}"
-
-    HTTP_STATUS=$(curl -s -o /tmp/imds.json -w '%{http_code}' \
-      -H "Metadata:true" \
-      "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=${AAD_RESOURCE}&client_id=${AAD_CLIENT_ID}")
-
-    echo "HTTP status from IMDS: ${HTTP_STATUS}"
-    echo "Raw IMDS response:"
-    cat /tmp/imds.json
-    echo
-
-    if [ "$HTTP_STATUS" -ne 200 ]; then
-      echo "❌ IMDS did not return 200. Cannot get token."
-      exit 1
-    fi
-
-    ACCESS_TOKEN=$(jq -r '.access_token' /tmp/imds.json)
-
-    if [ -z "${ACCESS_TOKEN}" ] || [ "${ACCESS_TOKEN}" = "null" ]; then
-      echo "❌ access_token not present in IMDS response"
-      exit 1
-    fi
-
-    echo "PGPASSWORD=${ACCESS_TOKEN}" >> "$GITHUB_ENV"
-    echo "✅ AAD access token stored in PGPASSWORD"
+🔐 Requesting AAD access token for client_id=89ee61fa-75b5-41a8-a9b2-c5d719440f89
+HTTP status from IMDS: 400
+Raw IMDS response:
+{"error":"invalid_request","error_description":"Identity not found"}
+❌ IMDS did not return 200. Cannot get token.
