@@ -17,6 +17,13 @@
   </dependencies>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- SonarQube Properties -->
+    <properties>
+      <sonar.projectKey>my-maven-app</sonar.projectKey>
+      <sonar.projectName>my-maven-app</sonar.projectName>
+      <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
+    </properties>
+    
   </properties>
   <build>
     <pluginManagement>
