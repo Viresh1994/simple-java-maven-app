@@ -77,10 +77,15 @@ jobs:
     - name: Verify Helm
       run: helm version
 
-    # - name: Clean old resources (optional)
-    #   run: |
-    #     kubectl delete deployment my-maven-app --ignore-not-found=true || true
-    #     kubectl delete svc my-maven-app-service --ignore-not-found=true || true
+    - name: Ensure kind cluster is running
+      run: |
+        if ! kind get clusters | grep -q '^ci-cluster$'; then
+          echo "Creating kind cluster ci-cluster..."
+          kind create cluster --name ci-cluster
+        else
+        echo "kind cluster ci-cluster already exists"
+        fi
+        kubectl get nodes
 
 
     - name: Deploy using Helm
