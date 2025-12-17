@@ -53,7 +53,7 @@ pipeline {
 
         stage('Docker Build') {
             when {
-                branch 'master'
+                expression { env.GIT_BRANCH == 'master' }
             }
             steps {
                 sh '''
@@ -67,7 +67,7 @@ pipeline {
 		
 		stage('Docker Push') {
             when {
-                branch 'master'
+                expression { env.GIT_BRANCH == 'master' }
             }
             steps {
                 sh '''
@@ -85,7 +85,8 @@ pipeline {
      post {
         success {
             echo "Pipeline SUCCESS"
-            echo "Docker image pushed: ${IMAGE_NAME}:${GIT_SHA}"
+            echo "Branch: ${env.GIT_BRANCH}"
+			echo "Docker image pushed: ${IMAGE_NAME}:${GIT_SHA}"
         }
         failure {
             echo "Pipeline FAILED"
