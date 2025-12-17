@@ -53,7 +53,7 @@ pipeline {
 
         stage('Docker Build') {
             when {
-                branch 'main'
+                branch 'master'
             }
             steps {
                 sh '''
