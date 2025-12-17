@@ -2,7 +2,12 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven_Home'   // MUST match Jenkins Tools name
+        maven 'Maven_Home'   // must match Jenkins Tools name
+    }
+
+    environment {
+        IMAGE_NAME = 'my-app'
+        IMAGE_TAG  = "${BUILD_NUMBER}"
     }
 
     stages {
@@ -21,12 +26,12 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('Sonar Scanner') {   // MUST match server name
+                withSonarQubeEnv('Sonar Scanner') {   // must match Sonar server name
                     sh '''
                       mvn sonar:sonar \
-                      -Dsonar.projectKey=my-app \
-                      -Dsonar.projectName=my-app \
-                      -Dsonar.java.binaries=target
+                        -Dsonar.projectKey=my-app \
+                        -Dsonar.projectName=my-app \
+                        -Dsonar.java.binaries=target
                     '''
                 }
             }
@@ -39,18 +44,8 @@ pipeline {
                 }
             }
         }
-    }
 
-    post {
-        success {
-            echo 'Build & SonarQube passed'
-        }
-        failure {
-            echo 'Pipeline failed'
-        }
-    }
-	
-	stage('Docker Build') {
+        stage('Docker Build') {
             steps {
                 sh '''
                   docker build \
@@ -63,7 +58,7 @@ pipeline {
 
     post {
         success {
-            echo "Docker image built: ${IMAGE_NAME}:${IMAGE_TAG}"
+            echo "Pipeline successful. Docker image: ${IMAGE_NAME}:${IMAGE_TAG}"
         }
         failure {
             echo "Pipeline failed"
