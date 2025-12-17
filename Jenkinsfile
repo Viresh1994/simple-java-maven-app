@@ -21,7 +21,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') {   // MUST match server name
+                withSonarQubeEnv('Sonar Scanner') {   // MUST match server name
                     sh '''
                       mvn sonar:sonar \
                       -Dsonar.projectKey=my-app \
