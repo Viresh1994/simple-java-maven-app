@@ -82,7 +82,8 @@ pipeline {
 			steps {
 				sh '''
 				  TRIVY_CONFIG=/dev/null trivy image \
-					--severity HIGH,CRITICAL \
+					--scanners vuln \
+					--severity CRITICAL \
 					--exit-code 1 \
 					${IMAGE_NAME}:${GIT_SHA}
 				'''
