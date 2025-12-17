@@ -21,7 +21,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('sonarqube') {   // MUST match server name
+                withSonarQubeEnv('Sonar Scanner') {   // MUST match server name
                     sh '''
                       mvn sonar:sonar \
                       -Dsonar.projectKey=my-app \
@@ -47,6 +47,26 @@ pipeline {
         }
         failure {
             echo 'Pipeline failed'
+        }
+    }
+	
+	stage('Docker Build') {
+            steps {
+                sh '''
+                  docker build \
+                    -t ${IMAGE_NAME}:${IMAGE_TAG} \
+                    .
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Docker image built: ${IMAGE_NAME}:${IMAGE_TAG}"
+        }
+        failure {
+            echo "Pipeline failed"
         }
     }
 }
