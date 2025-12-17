@@ -6,8 +6,8 @@ pipeline {
     }
 
     environment {
-        IMAGE_NAME = 'my-app'
-        IMAGE_TAG  = "${BUILD_NUMBER}"
+        IMAGE_NAME = 'viresh1994/my-app'
+        DOCKER_CREDS = credentials('dockerhub-creds')
     }
 
     stages {
@@ -15,6 +15,12 @@ pipeline {
         stage('Checkout') {
             steps {
                 checkout scm
+                script {
+                    GIT_SHA = sh(
+                        script: 'git rev-parse --short HEAD',
+                        returnStdout: true
+                    ).trim()
+                }
             }
         }
 
@@ -46,22 +52,43 @@ pipeline {
         }
 
         stage('Docker Build') {
+            when {
+                branch 'main'
+            }
             steps {
                 sh '''
                   docker build \
-                    -t ${IMAGE_NAME}:${IMAGE_TAG} \
+                    -t ${IMAGE_NAME}:${GIT_SHA} \
+                    -t ${IMAGE_NAME}:latest \
                     .
+                '''
+            }
+        }
+		
+		stage('Docker Push') {
+            when {
+                branch 'main'
+            }
+            steps {
+                sh '''
+                  echo "$DOCKER_CREDS_PSW" | docker login \
+                    -u "$DOCKER_CREDS_USR" \
+                    --password-stdin
+
+                  docker push ${IMAGE_NAME}:${GIT_SHA}
+                  docker push ${IMAGE_NAME}:latest
                 '''
             }
         }
     }
 
-    post {
+     post {
         success {
-            echo "Pipeline successful. Docker image: ${IMAGE_NAME}:${IMAGE_TAG}"
+            echo "Pipeline SUCCESS"
+            echo "Docker image pushed: ${IMAGE_NAME}:${GIT_SHA}"
         }
         failure {
-            echo "Pipeline failed"
+            echo "Pipeline FAILED"
         }
     }
 }
