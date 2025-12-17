@@ -67,7 +67,7 @@ pipeline {
 		
 		stage('Docker Push') {
             when {
-                branch 'main'
+                branch 'master'
             }
             steps {
                 sh '''
