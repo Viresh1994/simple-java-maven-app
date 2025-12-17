@@ -63,7 +63,7 @@ pipeline {
 
         stage('Docker Build') {
             when {
-                expression { env.GIT_BRANCH == 'master' }
+                expression { env.GIT_BRANCH.endsWith('/master') }
             }
             steps {
                 sh '''
@@ -77,7 +77,7 @@ pipeline {
 		
 		stage('Docker Push') {
             when {
-                expression { env.GIT_BRANCH == 'master' }
+                expression { env.GIT_BRANCH.endsWith('/master') }
             }
             steps {
                 sh '''
