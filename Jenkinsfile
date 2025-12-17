@@ -75,6 +75,20 @@ pipeline {
             }
         }
 		
+		stage('Trivy Scan') {
+			when {
+				expression { env.GIT_BRANCH.endsWith('/master') }
+			}
+			steps {
+				sh '''
+				  TRIVY_CONFIG=/dev/null trivy image \
+					--severity HIGH,CRITICAL \
+					--exit-code 1 \
+					${IMAGE_NAME}:${GIT_SHA}
+				'''
+			}
+		}
+		
 		stage('Docker Push') {
             when {
                 expression { env.GIT_BRANCH.endsWith('/master') }
