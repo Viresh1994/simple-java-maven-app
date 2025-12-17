@@ -74,7 +74,7 @@
           </execution>
         </executions>
       </plugin>
-         <!-- 🔥 SonarQube Maven Plugin (Add this here) -->
+         <!-- SonarQube Maven Plugin (Add this here) -->
       <plugin>
         <groupId>org.sonarsource.scanner.maven</groupId>
         <artifactId>sonar-maven-plugin</artifactId>
