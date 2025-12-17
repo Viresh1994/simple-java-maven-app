@@ -13,16 +13,26 @@ pipeline {
     stages {
 
         stage('Checkout') {
-            steps {
-                checkout scm
-                script {
-                    GIT_SHA = sh(
-                        script: 'git rev-parse --short HEAD',
-                        returnStdout: true
-                    ).trim()
-                }
-            }
-        }
+			steps {
+				git branch: 'master',
+					url: 'https://github.com/Viresh1994/simple-java-maven-app.git'
+
+			script {
+				env.GIT_SHA = sh(
+					script: 'git rev-parse --short HEAD',
+					returnStdout: true
+				).trim()
+
+				env.GIT_BRANCH = sh(
+					script: 'git branch --show-current',
+					returnStdout: true
+				).trim()
+
+				echo "Branch: ${env.GIT_BRANCH}"
+				echo "Commit: ${env.GIT_SHA}"
+			}
+		}
+	}
 
         stage('Build') {
             steps {
