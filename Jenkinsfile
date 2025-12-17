@@ -2,10 +2,11 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven_Home'   // MUST match the name in Jenkins Tools
+        maven 'Maven_Home'   // MUST match Jenkins Tools name
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -14,18 +15,38 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'mvn -version'
-                sh 'mvn clean package'
+                sh 'mvn clean verify'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('sonarqube') {   // MUST match server name
+                    sh '''
+                      mvn sonar:sonar \
+                      -Dsonar.projectKey=my-app \
+                      -Dsonar.projectName=my-app \
+                      -Dsonar.java.binaries=target
+                    '''
+                }
+            }
+        }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Build successful'
+            echo 'Build & SonarQube passed'
         }
         failure {
-            echo 'Build failed'
+            echo 'Pipeline failed'
         }
     }
 }
