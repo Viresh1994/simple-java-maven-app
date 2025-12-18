@@ -39,7 +39,7 @@ permissions:
 
 jobs:
   deploy-dev:
-    if: ${{ github.event.inputs.env == 'DEV' }}
+    if: ${{ github.event.inputs.environment == 'DEV' }}
     runs-on: ubuntu-latest
     environment: DEV
 
@@ -53,7 +53,7 @@ jobs:
           # put your DEV deployment commands here
 
   deploy-itt:
-    if: ${{ github.event.inputs.env == 'ITT' }}
+    if: ${{ github.event.inputs.environment == 'ITT' }}
     runs-on: ubuntu-latest
     environment: ITT
 
@@ -67,7 +67,7 @@ jobs:
           # put your ITT deployment commands here
 
   deploy-prod:
-    if: ${{ github.event.inputs.env == 'UAT' }}
+    if: ${{ github.event.inputs.environment == 'UAT' }}
     runs-on: ubuntu-latest
     environment: UAT
 
