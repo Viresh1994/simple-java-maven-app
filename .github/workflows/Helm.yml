@@ -39,9 +39,9 @@ permissions:
 
 jobs:
   deploy-dev:
-    if: ${{ github.event.inputs.env == 'dev' }}
+    if: ${{ github.event.inputs.env == 'DEV' }}
     runs-on: ubuntu-latest
-    environment: dev
+    environment: DEV
 
     steps:
       - name: Checkout code
@@ -53,9 +53,9 @@ jobs:
           # put your DEV deployment commands here
 
   deploy-itt:
-    if: ${{ github.event.inputs.env == 'itt' }}
+    if: ${{ github.event.inputs.env == 'ITT' }}
     runs-on: ubuntu-latest
-    environment: itt
+    environment: ITT
 
     steps:
       - name: Checkout code
@@ -67,15 +67,15 @@ jobs:
           # put your ITT deployment commands here
 
   deploy-prod:
-    if: ${{ github.event.inputs.env == 'prod' }}
+    if: ${{ github.event.inputs.env == 'UAT' }}
     runs-on: ubuntu-latest
-    environment: prod
+    environment: UAT
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy to PROD
+      - name: Deploy to UAT
         run: |
-          echo "Deploying to PROD environment"
+          echo "Deploying to UAT environment"
           # put your PROD deployment commands here
