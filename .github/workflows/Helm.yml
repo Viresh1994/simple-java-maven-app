@@ -1,0 +1,81 @@
+name: Helm
+
+on:
+  workflow_dispatch:
+    inputs:
+      component:
+        description: 'Select DAMS component to deploy'
+        type: choice
+        required: true
+        options:
+          - damsui
+          - damscorapi
+          - damsbatchjobs
+
+      version:
+        description: 'Select version to deploy'
+        type: choice
+        required: true
+        options:
+          - 0.0.1
+          - 0.0.2
+          - 0.0.3
+          - 0.0.4
+          - latest
+        default: latest
+
+      environment:
+        description: 'Target deployment environment'
+        type: choice
+        required: true
+        options:
+          - DEV
+          - ITT
+          - UAT
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy-dev:
+    if: ${{ github.event.inputs.env == 'dev' }}
+    runs-on: ubuntu-latest
+    environment: dev
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to DEV
+        run: |
+          echo "Deploying to DEV environment"
+          # put your DEV deployment commands here
+
+  deploy-itt:
+    if: ${{ github.event.inputs.env == 'itt' }}
+    runs-on: ubuntu-latest
+    environment: itt
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to ITT
+        run: |
+          echo "Deploying to ITT environment"
+          # put your ITT deployment commands here
+
+  deploy-prod:
+    if: ${{ github.event.inputs.env == 'prod' }}
+    runs-on: ubuntu-latest
+    environment: prod
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to PROD
+        run: |
+          echo "Deploying to PROD environment"
+          # put your PROD deployment commands here
