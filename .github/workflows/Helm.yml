@@ -52,6 +52,8 @@ jobs:
           echo "Deploying component : ${{ github.event.inputs.component }}"
           echo "Version             : ${{ github.event.inputs.version }}"
           echo "Target environment  : DEV"
+          echo "Approved by : $GITHUB_ACTOR"
+          echo "Triggered by: ${{ github.triggering_actor }}"
 
   deploy-itt:
     if: ${{ github.event.inputs.environment == 'ITT' }}
@@ -66,7 +68,9 @@ jobs:
         run: |
           echo "Deploying component : ${{ github.event.inputs.component }}"
           echo "Version             : ${{ github.event.inputs.version }}"
-          echo "Target environment  : ITT"
+          echo "Target environment  : ITT"          
+          echo "Approved by : $GITHUB_ACTOR"
+          echo "Triggered by: ${{ github.triggering_actor }}"
 
   deploy-uat:
     if: ${{ github.event.inputs.environment == 'UAT' }}
@@ -82,3 +86,5 @@ jobs:
           echo "Deploying component : ${{ github.event.inputs.component }}"
           echo "Version             : ${{ github.event.inputs.version }}"
           echo "Target environment  : UAT"
+          echo "Approved by : $GITHUB_ACTOR"
+          echo "Triggered by: ${{ github.triggering_actor }}"
