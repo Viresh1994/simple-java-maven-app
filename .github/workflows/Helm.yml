@@ -33,8 +33,6 @@ on:
           - ITT
           - UAT
 
-permissions:
-
 jobs:
   deploy-dev:
     if: ${{ github.event.inputs.environment == 'DEV' }}
